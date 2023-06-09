@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.koreaIT.java.am.config.Config;
 import com.koreaIT.java.am.util.DBUtil;
 import com.koreaIT.java.am.util.SecSql;
 
@@ -23,10 +24,10 @@ public class ArticleListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Connection conn = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			String url = "jdbc:mysql://127.0.0.1:3306/jsp_article_manager?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+			Class.forName(Config.getDBDriverName());
+			String url = Config.getDBUrl();
 			
-			conn = DriverManager.getConnection(url, "root", "");
+			conn = DriverManager.getConnection(url, Config.getDBUser(), Config.getDBPasswd());
 			
 			int page = 1;
 			
@@ -38,11 +39,24 @@ public class ArticleListServlet extends HttpServlet {
 			
 			int limitFrom = (page - 1) * itemsInAPage;
 			
+			
 			SecSql sql = new SecSql();
 			sql.append("SELECT COUNT(*) FROM article");
 			
 			int totalCount = DBUtil.selectRowIntValue(conn, sql);
 			int totalPage = (int) Math.ceil((double) totalCount / itemsInAPage);
+			
+			int pageSize = 5;
+			
+			int limitStartPage = page - pageSize;
+			if (limitStartPage <= 0) {
+				limitStartPage = 1;
+			}
+			
+			int limitEndPage = page + pageSize;
+			if (limitEndPage > totalPage) {
+				limitEndPage = totalPage;
+			}
 			
 			sql = new SecSql();
 			sql.append("SELECT *");
@@ -54,6 +68,8 @@ public class ArticleListServlet extends HttpServlet {
 			
 			request.setAttribute("page", page);
 			request.setAttribute("totalPage", totalPage);
+			request.setAttribute("limitStartPage", limitStartPage);
+			request.setAttribute("limitEndPage", limitEndPage);
 			request.setAttribute("articleListMap", articleListMap);
 			
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
