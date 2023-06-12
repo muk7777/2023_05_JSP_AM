@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/article/doModify")
+@WebServlet("/member/doJoin")
 public class MemberDoJoinServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -42,9 +42,9 @@ public class MemberDoJoinServlet extends HttpServlet {
 			sql.append(", loginPw = ?", loginPw);
 			sql.append(", name = ?", name);
 			
-			DBUtil.update(conn, sql);
+			DBUtil.insert(conn, sql);
 			
-			response.getWriter().append(String.format("<script>alert('회원가입이 완료되었습니다'); location.replace('../home/main');</script>"));
+			response.getWriter().append(String.format("<script>alert('%s님 회원가입이 완료되었습니다'); location.replace('../home/main');</script>", name));
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패");
