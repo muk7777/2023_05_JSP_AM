@@ -44,7 +44,7 @@ public class MemberDoJoinServlet extends HttpServlet {
 			
 			DBUtil.insert(conn, sql);
 			
-			response.getWriter().append(String.format("<script>alert('%s님이 가입되었습니다'); location.replace('../home/main');</script>", name));
+			response.getWriter().append(String.format("<script>alert('%s님 회원가입이 완료되었습니다'); location.replace('../home/main');</script>", name));
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패");
