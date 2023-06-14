@@ -61,12 +61,12 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>fdsafdsa</display-name>
-    <servlet-name>fdsafdsa</servlet-name>
-    <servlet-class>com.koreaIT.java.am.fdsafdsa</servlet-class>
+    <display-name>test</display-name>
+    <servlet-name>test</servlet-name>
+    <servlet-class>com.koreaIT.java.am.test</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>fdsafdsa</servlet-name>
-    <url-pattern>/fdsafdsa</url-pattern>
+    <servlet-name>test</servlet-name>
+    <url-pattern>/test</url-pattern>
   </servlet-mapping>
 </web-app>

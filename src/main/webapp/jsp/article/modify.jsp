@@ -14,12 +14,12 @@
 <title>게시물 수정</title>
 </head>
 <body>
-	<form action="doModify" method="post">
-		<input name="id" type="hidden" value="<%= (int) articleMap.get("id") %>"/>
+	<form action="doModify" method="POST">
+		<input name="id" type="hidden" value="<%= (int) articleMap.get("id") %>" />
 		<h1><%= (int) articleMap.get("id") %>번 게시물</h1>
 		<div>글번호 : <%= (int) articleMap.get("id") %></div>
 		<div>작성일 : <%= (LocalDateTime) articleMap.get("regDate") %></div>
-		<div>제목 : <input name="title" type="text" placeholder="제목을 입력해주세요." value="<%= (String) articleMap.get("title") %>"/></div>
+		<div>제목 : <input name="title" type="text" value="<%= (String) articleMap.get("title") %>"/></div>
 		<div>내용 : <textarea name="body"><%= (String) articleMap.get("body") %></textarea></div>
 		<div>
 			<input type="submit" value="수정"/>

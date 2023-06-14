@@ -35,7 +35,7 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			String body = request.getParameter("body");
 			
 			SecSql sql = new SecSql();
-			sql.append("Update article");
+			sql.append("UPDATE article");
 			sql.append("SET updateDate = NOW()");
 			sql.append(", title = ?", title);
 			sql.append(", `body` = ?", body);
@@ -43,7 +43,7 @@ public class ArticleDoModifyServlet extends HttpServlet {
 			
 			DBUtil.update(conn, sql);
 			
-			response.getWriter().append(String.format("<script>alert('%d번 게시글이 수정 되었습니다'); location.replace('detail?id=%d');</script>", id, id));
+			response.getWriter().append(String.format("<script>alert('%d번 게시글 수정 성공'); location.replace('detail?id=%d');</script>", id, id));
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패");
@@ -63,5 +63,4 @@ public class ArticleDoModifyServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
-	
 }

@@ -7,8 +7,9 @@
 	List<Map<String, Object>> articleListMap = (List<Map<String, Object>>) request.getAttribute("articleListMap");
 	int currentPage = (int) request.getAttribute("page");
 	int totalPage = (int) request.getAttribute("totalPage");
-	int limitStartPage = (int) request.getAttribute("limitStartPage");
-	int limitEndPage = (int) request.getAttribute("limitEndPage");
+	int from = (int) request.getAttribute("from");
+	int end = (int) request.getAttribute("end");
+	int loginedMemberId = (int) request.getAttribute("loginedMemberId");
 %>
 
 <!DOCTYPE html>
@@ -21,7 +22,13 @@
 	<h1>게시물 리스트</h1>
 	
 	<div><a href="../home/main">메인</a></div>
-	<div><a href="write">글쓰기</a></div>
+	<%
+		if (loginedMemberId != -1) {
+	%>
+		<div><a href="write">글쓰기</a></div>
+	<% 	
+		}
+	%>
 	
 	<table border="1">
 		<colgroup>
@@ -33,6 +40,7 @@
 			<th>번호</th>
 			<th>작성일</th>
 			<th>제목</th>
+			<th>작성자</th>
 		</tr>
 		<% 
  			for(Map<String, Object> articleMap : articleListMap){
@@ -41,6 +49,7 @@
 			<td><%= articleMap.get("id") %></td>
 			<td><%= articleMap.get("regDate") %></td>
 			<td><a href="detail?id=<%= articleMap.get("id") %>"><%= articleMap.get("title") %></a></td>
+			<td><%= articleMap.get("writerName") %></td>
 		</tr>
 		<%
  			}
@@ -55,13 +64,13 @@
 	</style>
 	
 	<div class="paging">
-		<% if (currentPage > 1) {%>
+		<% if (currentPage > 1) { %>
 			<a href="list?page=1">◀</a>
 		<% } %>
-		<% for(int i = limitStartPage; i <= limitEndPage; i++) { %>
+		<% for(int i = from; i <= end; i++) { %>
 			<a class="<%= currentPage == i ? "red" : "" %>" href="list?page=<%= i %>"><%= i %></a>
 		<% } %>
-		<% if (currentPage < totalPage) {%>
+		<% if (currentPage < totalPage) { %>
 			<a href="list?page=<%= totalPage %>">▶</a>
 		<% } %>
 	</div>

@@ -16,11 +16,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/article/list")
 public class ArticleListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Connection conn = null;
 		try {
@@ -39,7 +40,6 @@ public class ArticleListServlet extends HttpServlet {
 			
 			int limitFrom = (page - 1) * itemsInAPage;
 			
-			
 			SecSql sql = new SecSql();
 			sql.append("SELECT COUNT(*) FROM article");
 			
@@ -48,29 +48,40 @@ public class ArticleListServlet extends HttpServlet {
 			
 			int pageSize = 5;
 			
-			int limitStartPage = page - pageSize;
-			if (limitStartPage <= 0) {
-				limitStartPage = 1;
+			int from = page - pageSize;
+			if (from < 1) {
+				from = 1;
 			}
 			
-			int limitEndPage = page + pageSize;
-			if (limitEndPage > totalPage) {
-				limitEndPage = totalPage;
+			int end = page + pageSize;
+			if (end > totalPage) {
+				end = totalPage;
+			}
+			
+			HttpSession session = request.getSession();
+			
+			int loginedMemberId = -1;
+			
+			if (session.getAttribute("loginedMemberId") != null) {
+				loginedMemberId = (int) session.getAttribute("loginedMemberId");
 			}
 			
 			sql = new SecSql();
-			sql.append("SELECT *");
-			sql.append("FROM article");
-			sql.append("ORDER BY id DESC");
+			sql.append("SELECT a.*, m.name AS writerName");
+			sql.append("FROM article AS a");
+			sql.append("INNER JOIN `member` AS m");
+			sql.append("ON a.memberId = m.id");
+			sql.append("ORDER BY a.id DESC");
 			sql.append("LIMIT ?, ?", limitFrom, itemsInAPage);
 			
 			List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 			
 			request.setAttribute("page", page);
 			request.setAttribute("totalPage", totalPage);
-			request.setAttribute("limitStartPage", limitStartPage);
-			request.setAttribute("limitEndPage", limitEndPage);
+			request.setAttribute("from", from);
+			request.setAttribute("end", end);
 			request.setAttribute("articleListMap", articleListMap);
+			request.setAttribute("loginedMemberId", loginedMemberId);
 			
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 			
